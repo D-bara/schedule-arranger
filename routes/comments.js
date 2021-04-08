@@ -8,12 +8,14 @@ router.post(
   '/:scheduleId/users/:userId/comments',
   authenticationEnsurer,
   (req, res, next) => {
-    const comment = req.body.comment.slice(0, 255);
+    let comment = req.body.comment;
+    // 禁止用語設定
+    comment = comment.replace(/NGワード/g, "***")
 
     Comment.upsert({
       scheduleId: req.params.scheduleId,
       userId: req.params.userId,
-      comment
+      comment: comment.slice(0, 255)
     }).then(() => {
       res.json({ status: 'OK', comment });
     });
