@@ -1,10 +1,15 @@
 'use strict';
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(
-  'postgres://postgres:postgres@localhost/schedule_arranger',
+  process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost/schedule_arranger',
+  // 以下の部分を追加してSSLを有効化
   {
-    // logging: false //テストのとき邪魔なSQL文を消す
-  });
+    dialectOptions: {
+      ssl: true,
+    }
+  }
+);
+
 
 module.exports = {
   database: sequelize,
